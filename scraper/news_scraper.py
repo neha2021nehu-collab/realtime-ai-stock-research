@@ -1,7 +1,8 @@
 import asyncio
 from playwright.async_api import async_playwright
 from dotenv import load_dotenv
-from datetime import datetime
+from datetime import datetime, timezone, date
+from storage import save_to_json
 
 load_dotenv()
 
@@ -32,8 +33,10 @@ async def scrape_finviz_news() -> list[dict]:
                 results.append({
                     "headline": headline.strip(),
                     "url" : url,
-                    "time" : time_text.strip(),
-                    "scraped_at" : datetime.now(datetime.UTC).isoformat()
+                    "time_raw" : time_text.strip(),
+                    "published_at" : f"{date.today().isoformat()} {time_text.strip()}",
+                    "scraped_at" : datetime.now(timezone.utc).isoformat()
+                    #"scraped_at" : datetime.now(datetime.UTC).isoformat()
                 })
         await browser.close()
     return results
@@ -45,8 +48,9 @@ async def main():
         return
     print(f"[scraper] Fetched {len(news)} headlines\n")
     for item in news[:5]:
-        print(f"   [{item['time']}]  {item['headline']}")
+        print(f"   [{item['published_at']}]  {item['headline']}")
         print(f"   -> {item['url']}\n")
+    save_to_json(news)
 
 # if __name__ == "__main__":
 #     asyncio.run(main())
