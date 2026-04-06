@@ -3,6 +3,7 @@ from playwright.async_api import async_playwright
 from dotenv import load_dotenv
 from datetime import datetime, timezone, date
 from storage import save_to_json
+from deduplicator import filter_new
 
 load_dotenv()
 
@@ -47,6 +48,11 @@ async def main():
         print("[scraper] No results found. Site structure may have changed.")
         return
     print(f"[scraper] Fetched {len(news)} headlines\n")
+    new_news = filter_new(news)
+    if not new_news:
+        print("[scraper] No new headlines to save.")
+        return
+    
     for item in news[:5]:
         print(f"   [{item['published_at']}]  {item['headline']}")
         print(f"   -> {item['url']}\n")
