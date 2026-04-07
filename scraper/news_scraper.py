@@ -1,5 +1,6 @@
 import asyncio
 from playwright.async_api import async_playwright
+from kafka_producer import publish_headlines
 from dotenv import load_dotenv
 from datetime import datetime, timezone, date
 from storage import save_to_json
@@ -56,7 +57,8 @@ async def main():
     for item in news[:5]:
         print(f"   [{item['published_at']}]  {item['headline']}")
         print(f"   -> {item['url']}\n")
-    save_to_json(news)
+    # save_to_json(news)
+    publish_headlines(new_news)
 
 # if __name__ == "__main__":
 #     asyncio.run(main())

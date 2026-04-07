@@ -2,7 +2,7 @@ import json
 import os
 from datetime import datetime, timezone
 
-OUTPUT_DIR = os.path.join(os.path.dirname(__file__),"..","date")
+OUTPUT_DIR = os.path.join(os.path.dirname(__file__),"..","data")
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 def save_to_json(headlines: list[dict]) -> str:
