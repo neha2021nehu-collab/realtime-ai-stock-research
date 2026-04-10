@@ -1,19 +1,27 @@
 import json
-from kafka import KafkaProducer
+from confluent_kafka import Producer
 from datetime import datetime, timezone
 
 KAFKA_BROKER = "localhost:9092"
 TOPIC = "raw_headlines"
 
-producer = KafkaProducer(
-    bootstrap_servers=KAFKA_BROKER,
-    value_serializer=lambda v: json.dumps(v).encode("utf-8")
+producer = Producer(
+    {"bootstrap.servers":KAFKA_BROKER}
+    
 )
+
+def delivery_report(err, msg):
+    if err:
+        print(f"[kafka] Delivery failed: {err}")
 
 def publish_headlines(headlines: list[dict]):
     published = 0
     for item in headlines:
-        producer.send(TOPIC, value=item)
+        producer.produce(
+            TOPIC,
+            value=json.dumps(item).encode("utf-8"),
+            callback=delivery_report
+        )
         published += 1
     producer.flush()
     print(f"[kafka] Published {published} headlines to topic '{TOPIC}'")
