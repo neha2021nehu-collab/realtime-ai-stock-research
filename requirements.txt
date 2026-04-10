@@ -1,3 +1,9 @@
 playwright
 python-dotenv
 apscheduler
+confluent-kafka
+vaderSentiment
+transformers
+torch
+
+#playwright install chromium
