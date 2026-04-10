@@ -6,5 +6,6 @@ vaderSentiment
 transformers
 torch
 psycopg2-binary
-
+fastapi
+uvicorn
 #playwright install chromium
