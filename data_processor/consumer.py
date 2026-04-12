@@ -7,6 +7,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from confluent_kafka import Consumer
 from data_processor.nlp_processor import process_headline
 from data_processor.db import insert_headlines  # add this
+from ml_service.tracker import log_sentiment_batch
 
 KAFKA_BROKER = "localhost:9092"
 TOPIC = "raw_headlines"
@@ -50,11 +51,13 @@ def start_consumer():
             # insert in batches of 50
             if len(batch) >= 50:
                 insert_headlines(batch)
+                log_sentiment_batch(batch)
                 batch = []
 
     except KeyboardInterrupt:
         if batch:
             insert_headlines(batch)
+            log_sentiment_batch(batch)
         print("\n[consumer] Stopped.")
     finally:
         consumer.close()

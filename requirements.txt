@@ -8,4 +8,5 @@ torch
 psycopg2-binary
 fastapi
 uvicorn
+mlflow
 #playwright install chromium
