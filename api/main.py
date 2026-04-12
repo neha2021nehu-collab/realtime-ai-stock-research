@@ -3,8 +3,11 @@ from fastapi.middleware.cors import CORSMiddleware
 import psycopg2
 import psycopg2.extras
 from datetime import datetime, timezone
+from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI(title="Stock Research API")
+Instrumentator().instrument(app).expose(app)
+
 
 app.add_middleware(
     CORSMiddleware,
